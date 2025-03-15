@@ -1,0 +1,1 @@
+print("tu cos bedzie")
