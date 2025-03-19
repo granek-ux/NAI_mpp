@@ -40,17 +40,21 @@ public class Pliki {
     public void PorowanieDanych() {
         daneTreningowe = PobranieDanych(plikDanychTreningowych);
         int nirgit = 0;
-        for (Obserwacja obs : daneTestowe) {
+        int dobreDane =0;
+        for (Obserwacja obs : daneTreningowe) {
             String name = DlaJednegoWektora(obs);
 
             if (!name.equals(obs.getAtrybutDecyzyjny())) {
                 nirgit++;
+            }else {
+                dobreDane++;
             }
         }
-        double procent = (double) (daneTestowe.size() - nirgit) / daneTestowe.size();
+        double procent =(double) dobreDane / daneTreningowe.size();
         procent = procent * 100;
-
-        System.out.println("Procent  zgadzających się danych testowych z obliczeniami: " + procent + "%");
+        
+        System.out.println("Ilosc zgodnych danych: " + dobreDane );
+        System.out.println("Procent zgadzających się danych testowych z obliczeniami: " + procent + "%");
 
     }
 
