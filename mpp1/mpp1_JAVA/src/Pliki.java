@@ -5,15 +5,15 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class Pliki {
-    private final String plikDanychTreningowych = "iris_test.txt";
-    private final String plikDanychTestowych = "iris_training.txt";
-    private List<Obserwacja> daneTreningowe = new ArrayList<>();
+    private final String plikDanychTreningowych = "iris_training.txt";
+    private final String plikDanychTestowych = "iris_test.txt";
     private List<Obserwacja> daneTestowe = new ArrayList<>();
+    private List<Obserwacja> daneTreningowe = new ArrayList<>();
     private final int liczbaBliskichSasiadow;
 
     public Pliki(int liczbaBliskichSasiadow) {
         this.liczbaBliskichSasiadow = liczbaBliskichSasiadow;
-        this.daneTestowe = PobranieDanych(plikDanychTestowych);
+        this.daneTreningowe = PobranieDanych(plikDanychTreningowych);
         PorowanieDanych();
     }
 
@@ -38,10 +38,10 @@ public class Pliki {
     }
 
     public void PorowanieDanych() {
-        daneTreningowe = PobranieDanych(plikDanychTreningowych);
+        daneTestowe = PobranieDanych(plikDanychTestowych);
         int nirgit = 0;
         int dobreDane =0;
-        for (Obserwacja obs : daneTreningowe) {
+        for (Obserwacja obs : daneTestowe) {
             String name = DlaJednegoWektora(obs);
 
             if (!name.equals(obs.getAtrybutDecyzyjny())) {
@@ -50,7 +50,7 @@ public class Pliki {
                 dobreDane++;
             }
         }
-        double procent =(double) dobreDane / daneTreningowe.size();
+        double procent =(double) dobreDane / daneTestowe.size();
         procent = procent * 100;
         
         System.out.println("Ilosc zgodnych danych: " + dobreDane );
@@ -62,7 +62,7 @@ public class Pliki {
     public String DlaJednegoWektora(Obserwacja obs) {
 
         List<NamedDistance> distances = new ArrayList<>();
-        for (Obserwacja obs1 : daneTestowe) {
+        for (Obserwacja obs1 : daneTreningowe) {
             distances.add(CaculateDistance(obs1, obs));
         }
 
@@ -79,7 +79,7 @@ public class Pliki {
     }
 
     public int getVectorSize() {
-        return daneTreningowe.getFirst().getListaAtrybutowwarunkowych().size();
+        return daneTestowe.getFirst().getListaAtrybutowwarunkowych().size();
     }
 
 
