@@ -48,6 +48,7 @@ public class Pliki {
             }
         }
         double procent = (double) (daneTestowe.size() - nirgit) / daneTestowe.size();
+        procent = procent * 100;
 
         System.out.println("Procent  zgadzających się danych testowych z obliczeniami: " + procent + "%");
 
@@ -111,7 +112,6 @@ public class Pliki {
             } else {
                 map.put(minName, 1);
             }
-
         }
         return map;
     }
