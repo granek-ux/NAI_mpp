@@ -3,34 +3,26 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 
 public class Perceptron {
     private List<Double> weights;
     private double threshold;
-    private String testFileName;
-    private String trainingFileName;
-    private List<Obserwacja> trainingData;
-    private double learningConstant;
-
-//    public Perceptron(List<Double> weights, double threshold, String testFileName, String trainingFileName) {
-//        this.weights = weights;
-//        this.threshold = threshold;
-//        this.testFileName = testFileName;
-//        this.trainingFileName = trainingFileName;
-//        learningConstant = 0.1;
-//        this.trainingData = ReadFile(trainingFileName);
-//    }
+    private final String testFileName;
+    private final List<Obserwacja> trainingData;
+    private final double learningConstant;
 
     public Perceptron(String testFileName, String trainingFileName) {
         this.testFileName = testFileName;
-        this.trainingFileName = trainingFileName;
         this.learningConstant = 0.1;
         this.trainingData = ReadFile(trainingFileName);
+        randomiseWeightsThershold();
+        LearnData();
+        Test();
     }
 
     public void Start(List<Double> weights, double threshold)
@@ -40,8 +32,6 @@ public class Perceptron {
         LearnData();
         Test();
     }
-
-
 
     public int Compute(List<Double> inputs) {
         double net = IntStream.range(0, inputs.size()).mapToDouble(i -> weights.get(i) * inputs.get(i)).sum();
@@ -78,40 +68,49 @@ public class Perceptron {
     }
 
     public void LearnData() {
-        AtomicBoolean czySieZgadza = new AtomicBoolean(false);
-        AtomicInteger counter = new AtomicInteger(0);
-        while (!czySieZgadza.get()) {
-            czySieZgadza.set(true);
-            trainingData.forEach(o -> {
+        boolean czySieZgadza = false;
+        int counter = 0;
+        while (!czySieZgadza) {
+            czySieZgadza = true ;
+            for (Obserwacja o : trainingData) {
                 if (!Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals("Iris-setosa") ? 1 : 0))
-                    czySieZgadza.set(false);
+                    czySieZgadza = false;
 
-                counter.set(counter.get() + 1);
-            });
-
+                counter++;
+            }
         }
-        System.out.println(counter.get());
+        System.out.println(counter);
 
     }
 
     public void Test() {
         List<Obserwacja> testData = ReadFile(testFileName);
 
-        AtomicInteger counterGood = new AtomicInteger(0);
+        int counterGood = 0;
 
-        testData.forEach(o -> {
+        for (Obserwacja o : testData) {
             int yt = o.getAtrybutDecyzyjny().equals("Iris-setosa") ? 1 : 0;
 
-           int y = Compute(o.getListaAtrybutowwarunkowych());
-           if (yt == y) counterGood.incrementAndGet();
-        });
+            int y = Compute(o.getListaAtrybutowwarunkowych());
+            if (yt == y) counterGood++;
+        }
 
-        System.out.println("ilosc poprawnych danych: " +counterGood.get());
-        double percent = (double) counterGood.get() / testData.size() * 100;
+        System.out.println("ilosc poprawnych danych: " +counterGood);
+        double percent = (double) counterGood / testData.size() * 100;
         System.out.println("Procent poprawnych danych: " + percent + "%");
     }
 
     public int getSizeTrainingData() {
-        return trainingData.getFirst().getListaAtrybutowwarunkowych().size();
+        return trainingData.getFirst().getListSize();
+    }
+
+    private void randomiseWeightsThershold()
+    {
+        Random random = new Random();
+        this.threshold = random.nextDouble();
+
+        this.weights = Stream.generate(random::nextDouble)
+                .limit(getSizeTrainingData())
+                .collect(Collectors.toList());
     }
 }

@@ -21,4 +21,9 @@ public class Obserwacja {
         this.listaAtrybutowwarunkowych = listaAtrybutowwarunkowych;
         this.atrybutDecyzyjny = null;
     }
+
+    public int getListSize ()
+    {
+        return listaAtrybutowwarunkowych.size();
+    }
 }
