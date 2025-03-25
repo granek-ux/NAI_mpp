@@ -39,16 +39,12 @@ public class Pliki {
 
     public void PorowanieDanych() {
         daneTestowe = PobranieDanych(plikDanychTestowych);
-        int nirgit = 0;
         int dobreDane =0;
         for (Obserwacja obs : daneTestowe) {
             String name = DlaJednegoWektora(obs);
 
-            if (!name.equals(obs.getAtrybutDecyzyjny())) {
-                nirgit++;
-            }else {
+            if (name.equals(obs.getAtrybutDecyzyjny()))
                 dobreDane++;
-            }
         }
         double procent =(double) dobreDane / daneTestowe.size();
         procent = procent * 100;

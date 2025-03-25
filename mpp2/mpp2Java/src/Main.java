@@ -11,17 +11,6 @@ public class Main {
         int size_limit = perceptron.getSizeTrainingData();
         Scanner sc = new Scanner(System.in);
 
-//        List<Double> wagi = new ArrayList<Double>();
-//
-//        System.out.println("podaj " + size_limit + " wag:");
-//        for(int i =0; i<size_limit ;i++)
-//            wagi.add(getDoubleFromScanner(sc));
-//
-//
-//        System.out.println("podaj próg");
-//        double prog = getDoubleFromScanner(sc);
-
-//        perceptron.Start(wagi, prog);
 
         while (true) {
             List<Double> sygnaly  = new ArrayList<>();

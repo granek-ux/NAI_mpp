@@ -25,14 +25,6 @@ public class Perceptron {
         Test();
     }
 
-    public void Start(List<Double> weights, double threshold)
-    {
-        this.weights = weights;
-        this.threshold = threshold;
-        LearnData();
-        Test();
-    }
-
     public int Compute(List<Double> inputs) {
         double net = IntStream.range(0, inputs.size()).mapToDouble(i -> weights.get(i) * inputs.get(i)).sum();
 
@@ -44,8 +36,10 @@ public class Perceptron {
         if (y == decision) return true;
 
         double stalaPoprawki = (decision - y) * learningConstant;
+        this.threshold = threshold + stalaPoprawki;
 
         IntStream.range(0, weights.size()).forEach(i -> weights.set(i, weights.get(i) + stalaPoprawki * inputs.get(i)));
+
 
         return false;
     }
