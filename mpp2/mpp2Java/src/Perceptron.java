@@ -27,7 +27,6 @@ public class Perceptron {
 
     public int Compute(List<Double> inputs) {
         double net = IntStream.range(0, inputs.size()).mapToDouble(i -> weights.get(i) * inputs.get(i)).sum();
-
         return net >= threshold ? 1 : 0;
     }
 
@@ -36,7 +35,7 @@ public class Perceptron {
         if (y == decision) return true;
 
         double stalaPoprawki = (decision - y) * learningConstant;
-        this.threshold = threshold + stalaPoprawki;
+//        this.threshold = threshold + stalaPoprawki;
 
         IntStream.range(0, weights.size()).forEach(i -> weights.set(i, weights.get(i) + stalaPoprawki * inputs.get(i)));
 
@@ -70,10 +69,10 @@ public class Perceptron {
                 if (!Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals("Iris-setosa") ? 1 : 0))
                     czySieZgadza = false;
 
-                counter++;
             }
+            counter++;
         }
-        System.out.println(counter);
+//        System.out.println(counter);
 
     }
 
