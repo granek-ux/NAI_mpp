@@ -1,33 +1,116 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
-    static final String testFileName = "../iris_test.txt";
-    static final String trainingFileName = "../iris_training.txt";
+    static final String testFileName = "../daneTestowe";
+    static final String traning = "../daneTreningowe";
 
     public static void main(String[] args) {
-//        Perceptron perceptron = new Perceptron(testFileName, trainingFileName);
-//        int size_limit = perceptron.getSizeTrainingData();
+
+        System.out.println("Pomiaru czas start");
+
+        FileHandling fh = new FileHandling(traning);
+
+        List<Obserwacja> trainingData = fh.getObserwacje();
+        Set<String> languages = fh.getLanguages();
+
+        List<Long> czasy = new ArrayList<>();
+
+        for (int i = 0; i < 2; i++) {
+
+            long start = System.nanoTime();
+
+            List<Obserwacja> Trainingdata = fh.getObserwacje();
+
+            List<Perceptron> perceptrons = languages.stream()
+                    .map(language -> new Perceptron(language, trainingData))
+                    .collect(Collectors.toList());
+
+            czasy.add(System.nanoTime() - start);
+        }
+
+        double elapsedTimeSecNormal = czasy.stream().mapToLong(Long::longValue).average().orElse(0);
+
+        elapsedTimeSecNormal /= 1_000_000_000F;
+
+        System.out.println(elapsedTimeSecNormal + " sec bez thread");
+
+
+        czasy.clear();
+
+        for (int i = 0; i < 2; i++) {
+
+            long start = System.nanoTime();
+
+
+
+//            List<Obserwacja> Trainingdata = fh.getObserwacje();
+
+            List<Perceptron> perceptrons = languages.parallelStream()
+                    .map(language -> new Perceptron(language, trainingData))
+                    .collect(Collectors.toList());
+
+            czasy.add(System.nanoTime()-start);
+        }
+
+        double elapsedTimeSecStream = czasy.stream().mapToLong(Long::longValue).average().orElse(0);
+        elapsedTimeSecStream /= 1_000_000_000F;  // Konwersja na sekundy
+
+        System.out.println(elapsedTimeSecStream + " sec z stream");
+
+        double różnica = elapsedTimeSecNormal - elapsedTimeSecStream;
+
+        System.out.println("Różnica (bez stream - parallelStream): " + różnica + " sec");
+
+//        test(perceptrons);
+//
 //        Scanner sc = new Scanner(System.in);
 //
-//
-//        while (true) {
-//            List<Double> sygnaly  = new ArrayList<>();
-//
-//            System.out.println("podaj dane wejsciowe: ");
-//            for (int i = 0; i < size_limit; i++)
-//                sygnaly .add(getDoubleFromScanner(sc));
-//
-//            String wynik = perceptron.Compute(sygnaly ) == 1 ? "Iris-setosa" : "To nie setosa";
-//            System.out.println("Wynik to: " + wynik);
-//        }
+//        while (true)
+//            kasyfikacjaInputUsera(perceptrons, sc);
 
-        FileHandling fileHandling = new FileHandling();
+
+    }
+
+    private static void test(List<Perceptron> perceptrons) {
+        FileHandling fh = new FileHandling(testFileName);
+        List<Obserwacja> testData = fh.getObserwacje();
+
+
+        int counter = testData.parallelStream()
+                .map(obs -> obs.getAtrybutDecyzyjny().equalsIgnoreCase(getResultFromPerceptron(perceptrons, obs.getListaAtrybutowwarunkowych())) ? 1 : 0)
+                .mapToInt(Integer::intValue)
+                .sum();
+
+        System.out.println("ilosc dobrych: " +  counter);
+
+        double percent = ((double) counter / (double) testData.size()) * 100;
+
+        System.out.println("percent = " + percent);
+
+    }
+
+    private static String getResultFromPerceptron(List<Perceptron> perceptrons, List<Double> inputs) {
+        return perceptrons.stream()
+                .max(Comparator.comparingDouble(p -> p.Compute(inputs)))
+                .map(Perceptron::getLanguage)
+                .orElse("");
     }
 
 
-    private static double getDoubleFromScanner(Scanner sc) {
-       return Double.parseDouble(sc.next().replaceAll(",",".").trim());
+    private static void kasyfikacjaInputUsera (List<Perceptron> perceptrons, Scanner sc ) {
+            System.out.println("Podaj tekst do klasyfikacji: ");
+
+            Map<Character, Integer> map = FileHandling.makeMap();
+            sc.nextLine().chars()
+                    .mapToObj(c -> (char) c)
+                    .filter(map::containsKey)
+                    .forEach(c -> map.computeIfPresent(c, (key, value) -> value + 1));
+
+            Obserwacja obserwacja = FileHandling.getObserwacja(null, map);
+
+            System.out.println("Wykryty język to: " + getResultFromPerceptron(perceptrons,obserwacja.getListaAtrybutowwarunkowych()));
+
+
     }
 }

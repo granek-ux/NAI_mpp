@@ -1,20 +1,27 @@
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileHandling {
     private Map<String, List<String>> trainingDataFiles;
-    private final String trainingdirPath = "../daneTestowe";
+    private  String filePath ;
+    private List<Obserwacja> obserwacje;
+    private Set<String> languages;
 
-    public FileHandling() {
+
+    public FileHandling(String filePath) {
+        this.filePath = filePath;
         trainingDataFiles = new LinkedHashMap<>();
-        readTrainingDatadirToMap(trainingdirPath);
-        trainingDataFiles.forEach((key, value) -> {
-            System.out.println(key + ": " + value);
-        });
+        languages = new TreeSet<>();
+        readTrainingDatadirToMap(filePath);
+        obserwacje = new ArrayList<>();
+        makeObserwacjaList();
+//        obserwacje.forEach(System.out::println);
+
     }
 
     private void readTrainingDatadirToMap(String dirName) {
@@ -32,6 +39,7 @@ public class FileHandling {
                         List<String> list = new ArrayList<>();
                         list.add(fileName);
                         trainingDataFiles.put(language, list);
+                        languages.add(language);
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -41,32 +49,44 @@ public class FileHandling {
         }
     }
 
-    private void readFile(String language, String fileName) {
+    private static Obserwacja readFile(String language, String fileName) {
         Map<Character,Integer> map = makeMap();
-        try {
-            Files.lines(Paths.get(fileName)).forEach(line -> line.chars().forEach(c -> {
-                char c1 = (char) c;
-                if (map.containsKey(c1)) {
-                    map.put(c1,map.get(c1)+1);
-                }
-            }));
+        try (Stream<String> lines = Files.lines(Paths.get(fileName))) {
+            lines.forEach(line -> line.chars()
+                    .mapToObj(c -> (char) c)
+                    .filter(map::containsKey)
+                    .forEach(c -> map.computeIfPresent(c, (key, value) -> value + 1)));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
 
+        return getObserwacja(language, map);
+    }
+
+    public static Obserwacja getObserwacja(String language, Map<Character, Integer> map) {
         int sum = map.values().stream().mapToInt(Integer::intValue).sum();
 
-        map.values().stream()
-                .mapToInt(Integer::intValue)
-                .mapToDouble(e -> e / (double) sum)
+        List<Double> list = map.values().stream()
+                .map(value -> value / (double) sum)
                 .collect(Collectors.toList());
 
+        return new Obserwacja(language, list);
+    }
 
+    private void makeObserwacjaList()
+    {
+        trainingDataFiles.forEach((key, value) -> {
+            value.forEach(fileName -> {
+               obserwacje.add(readFile(key,fileName));
+            });
+        });
+
+        Collections.shuffle(obserwacje);
     }
 
 
 
-    private static TreeMap<Character, Integer> makeMap ()
+    public static TreeMap<Character, Integer> makeMap ()
     {
         TreeMap<Character, Integer> map = new TreeMap<>();
         for ( int i = 97; i <= 122; i++ )
@@ -74,4 +94,11 @@ public class FileHandling {
         return map;
     }
 
+    public Set<String> getLanguages() {
+        return languages;
+    }
+
+    public List<Obserwacja> getObserwacje() {
+        return obserwacje;
+    }
 }

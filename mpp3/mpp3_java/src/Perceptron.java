@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -12,89 +13,50 @@ import java.util.stream.Stream;
 public class Perceptron {
     private List<Double> weights;
     private double threshold;
-    private final String testFileName;
-    private final List<Obserwacja> trainingData;
-    private final double learningConstant;
+    private String language;
+    private int sizeOfWeights;
+    private final double learningConstant =  0.1;
+    private final double wantedError = 0.001;
 
-    public Perceptron(String testFileName, String trainingFileName) {
-        this.testFileName = testFileName;
-        this.learningConstant = 0.1;
-        this.trainingData = ReadFile(trainingFileName);
+    public Perceptron(String language, List<Obserwacja> trainingData) {
+        this.language = language;
+        sizeOfWeights = trainingData.getFirst().getListSize();
         randomiseWeightsThershold();
-        LearnData();
-        Test();
+
+        LearnData(trainingData);
     }
 
-    public int Compute(List<Double> inputs) {
+    public double Compute(List<Double> inputs) {
         double net = IntStream.range(0, inputs.size()).mapToDouble(i -> weights.get(i) * inputs.get(i)).sum();
-        return net >= threshold ? 1 : 0;
+
+        return 1 / (1 + Math.exp( -net) );
     }
+    private boolean Learn(List<Double> inputs, double decision) {
+        double y = Compute(inputs);
+        double error = 1./2. * Math.pow ((decision - y ), 2);
+        if (error < wantedError) return true;
 
-    private boolean Learn(List<Double> inputs, int decision) {
-        int y = Compute(inputs);
-        if (y == decision) return true;
+        double stalaPoprawki = learningConstant * (decision - y) * y * ( 1 - y);
 
-        double stalaPoprawki = (decision - y) * learningConstant;
-//        this.threshold = threshold + stalaPoprawki;
-
-        IntStream.range(0, weights.size()).forEach(i -> weights.set(i, weights.get(i) + stalaPoprawki * inputs.get(i)));
+        IntStream.range(0, weights.size()).forEach(i -> weights.set(i, weights.get(i) + stalaPoprawki  * inputs.get(i)));
 
 
         return false;
     }
 
-    public List<Obserwacja> ReadFile(String filename) {
-        try {
-            return Files.lines(Paths.get(filename)).map(line -> {
-
-                String[] tokens = line.trim().replaceAll(",", ".").split("\\s+");
-                List<Double> tmplist = new ArrayList<>();
-
-                for (int i = 0; i < tokens.length - 1; i++)
-                    if (!tokens[i].isEmpty()) tmplist.add(Double.parseDouble(tokens[i]));
-
-                return new Obserwacja(tokens[tokens.length - 1], tmplist);
-            }).collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void LearnData() {
+    public void LearnData(List<Obserwacja> trainingData) {
         boolean czySieZgadza = false;
         int counter = 0;
         while (!czySieZgadza) {
             czySieZgadza = true ;
             for (Obserwacja o : trainingData) {
-                if (!Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals("Iris-setosa") ? 1 : 0))
+                if (!Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals(language) ? 1 : 0))
                     czySieZgadza = false;
 
             }
             counter++;
         }
-//        System.out.println(counter);
-
-    }
-
-    public void Test() {
-        List<Obserwacja> testData = ReadFile(testFileName);
-
-        int counterGood = 0;
-
-        for (Obserwacja o : testData) {
-            int yt = o.getAtrybutDecyzyjny().equals("Iris-setosa") ? 1 : 0;
-
-            int y = Compute(o.getListaAtrybutowwarunkowych());
-            if (yt == y) counterGood++;
-        }
-
-        System.out.println("ilosc poprawnych danych: " +counterGood);
-        double percent = (double) counterGood / testData.size() * 100;
-        System.out.println("Procent poprawnych danych: " + percent + "%");
-    }
-
-    public int getSizeTrainingData() {
-        return trainingData.getFirst().getListSize();
+//        System.out.println("Perceptron z językiem " + language + " uczył sie tyle epok: " + counter);
     }
 
     private void randomiseWeightsThershold()
@@ -103,7 +65,11 @@ public class Perceptron {
         this.threshold = random.nextDouble();
 
         this.weights = Stream.generate(random::nextDouble)
-                .limit(getSizeTrainingData())
+                .limit(sizeOfWeights)
                 .collect(Collectors.toList());
+    }
+
+    public String getLanguage() {
+        return language;
     }
 }

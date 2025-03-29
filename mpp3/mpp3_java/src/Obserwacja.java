@@ -26,4 +26,12 @@ public class Obserwacja {
     {
         return listaAtrybutowwarunkowych.size();
     }
+
+    @Override
+    public String toString() {
+        return "Obserwacja{" +
+                "atrybutDecyzyjny='" + atrybutDecyzyjny + '\'' +
+                ", listaAtrybutowwarunkowych=" + listaAtrybutowwarunkowych +
+                '}';
+    }
 }
