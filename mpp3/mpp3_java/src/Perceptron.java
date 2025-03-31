@@ -15,7 +15,7 @@ public class Perceptron {
     private String language;
     private int sizeOfWeights;
     private final double learningConstant =  0.1;
-    private final double wantedError = 0.1;
+    private final double wantedError = 0.01;
 
     public Perceptron(String language, List<Obserwacja> trainingData) {
         this.language = language;
@@ -37,6 +37,10 @@ public class Perceptron {
         double stalaPoprawki = learningConstant * (decision - y) * y * ( 1 - y);
 
         IntStream.range(0, weights.size()).forEach(i -> weights.set(i, (weights.get(i) + stalaPoprawki  * inputs.get(i) )));
+//
+//        double norm = Math.sqrt(weights.stream().mapToDouble(w -> w * w).sum());
+//
+//        IntStream.range(0, weights.size()).forEach(i -> weights.set(i, weights.get(i) / norm));
 //
 //        double tsts =0;
 //
@@ -80,7 +84,7 @@ public class Perceptron {
                  totalerr += Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals(language) ? 1 : 0);
             }
 
-            czySieZgadza = !(totalerr > wantedError);
+            czySieZgadza = totalerr  < wantedError;
             counter++;
         }
         System.out.println("Perceptron z językiem " + language + " uczył sie tyle epok: " + counter);
