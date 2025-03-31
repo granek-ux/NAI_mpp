@@ -21,7 +21,6 @@ public class FileHandling {
         obserwacje = new ArrayList<>();
         makeObserwacjaList();
 //        obserwacje.forEach(System.out::println);
-
     }
 
     private void readTrainingDatadirToMap(String dirName) {
@@ -83,8 +82,6 @@ public class FileHandling {
 
         Collections.shuffle(obserwacje);
     }
-
-
 
     public static TreeMap<Character, Integer> makeMap ()
     {

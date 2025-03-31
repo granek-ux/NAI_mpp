@@ -12,11 +12,10 @@ import java.util.stream.Stream;
 
 public class Perceptron {
     private List<Double> weights;
-    private double threshold;
     private String language;
     private int sizeOfWeights;
     private final double learningConstant =  0.1;
-    private final double wantedError = 0.001;
+    private final double wantedError = 0.1;
 
     public Perceptron(String language, List<Obserwacja> trainingData) {
         this.language = language;
@@ -31,38 +30,65 @@ public class Perceptron {
 
         return 1 / (1 + Math.exp( -net) );
     }
-    private boolean Learn(List<Double> inputs, double decision) {
+    private Double Learn(List<Double> inputs, double decision) {
         double y = Compute(inputs);
         double error = 1./2. * Math.pow ((decision - y ), 2);
-        if (error < wantedError) return true;
 
         double stalaPoprawki = learningConstant * (decision - y) * y * ( 1 - y);
 
-        IntStream.range(0, weights.size()).forEach(i -> weights.set(i, weights.get(i) + stalaPoprawki  * inputs.get(i)));
+        IntStream.range(0, weights.size()).forEach(i -> weights.set(i, (weights.get(i) + stalaPoprawki  * inputs.get(i) )));
+//
+//        double tsts =0;
+//
+//        for (double t: weights) {
+//            tsts += Math.pow(t, 2);
+//        }
+//        tsts = Math.sqrt(tsts);
+//
+//        for(int i=0 ; i < weights.size() ; i++ ) {
+//            weights.set(i, weights.get(i)/tsts);
+//        }
+
+//        double norm = 0.0;
+//
+//        for (int i = 0; i < weights.size(); i++) {
+//            double updatedWeight = weights.get(i) + stalaPoprawki * inputs.get(i);
+//            weights.set(i, updatedWeight);
+//            norm += updatedWeight * updatedWeight;
+//        }
+//
+//        norm = Math.sqrt(norm);
+//
+//        for (int i = 0; i < weights.size(); i++) {
+//            weights.set(i, weights.get(i) / norm);
+
+//        }
 
 
-        return false;
+
+//        weights.forEach(System.out::println);
+
+        return error;
     }
 
     public void LearnData(List<Obserwacja> trainingData) {
         boolean czySieZgadza = false;
         int counter = 0;
         while (!czySieZgadza) {
-            czySieZgadza = true ;
+            double totalerr =0.;
             for (Obserwacja o : trainingData) {
-                if (!Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals(language) ? 1 : 0))
-                    czySieZgadza = false;
-
+                 totalerr += Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals(language) ? 1 : 0);
             }
+
+            czySieZgadza = !(totalerr > wantedError);
             counter++;
         }
-//        System.out.println("Perceptron z językiem " + language + " uczył sie tyle epok: " + counter);
+        System.out.println("Perceptron z językiem " + language + " uczył sie tyle epok: " + counter);
     }
 
     private void randomiseWeightsThershold()
     {
         Random random = new Random();
-        this.threshold = random.nextDouble();
 
         this.weights = Stream.generate(random::nextDouble)
                 .limit(sizeOfWeights)
