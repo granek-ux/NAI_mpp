@@ -109,18 +109,17 @@ public class Main {
     }
 
 
-    private static void kasyfikacjaInputUsera (List<Perceptron> perceptrons, Scanner sc ) {
-            System.out.println("Podaj tekst do klasyfikacji: ");
+    public static String kasyfikacjaInputUsera(List<Perceptron> perceptrons, String text) {
 
-            Map<Character, Integer> map = FileHandling.makeMap();
-            sc.nextLine().chars()
-                    .mapToObj(c -> (char) c)
-                    .filter(map::containsKey)
-                    .forEach(c -> map.computeIfPresent(c, (key, value) -> value + 1));
+        Map<Character, Integer> map = FileHandling.makeMap();
+        text.chars()
+                .mapToObj(c -> (char) c)
+                .filter(map::containsKey)
+                .forEach(c -> map.computeIfPresent(c, (key, value) -> value + 1));
 
-            Obserwacja obserwacja = FileHandling.getObserwacja(null, map);
+        Obserwacja obserwacja = FileHandling.getObserwacja(null, map);
 
-            System.out.println("Wykryty język to: " + getResultFromPerceptron(perceptrons,obserwacja.getListaAtrybutowwarunkowych()));
+        return getResultFromPerceptron(perceptrons, obserwacja.getListaAtrybutowwarunkowych());
 
 
     }
