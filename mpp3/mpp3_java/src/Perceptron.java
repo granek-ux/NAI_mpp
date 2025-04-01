@@ -65,6 +65,19 @@ public class Perceptron {
                 .collect(Collectors.toList());
     }
 
+
+    public static List<Double> normalizeVector (List<Double> vector ) {
+
+        double norm = vector.stream().mapToDouble(e -> Math.pow(e,2)).sum();
+        norm = Math.sqrt(norm);
+
+        for(int i = 0; i < vector.size(); i++) {
+            vector.set(i, vector.get(i) / norm);
+        }
+
+        return vector;
+    }
+
     public String getLanguage() {
         return language;
     }
