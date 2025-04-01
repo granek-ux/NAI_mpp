@@ -8,19 +8,17 @@ import java.util.stream.Stream;
 
 public class FileHandling {
     private Map<String, List<String>> trainingDataFiles;
-    private  String filePath ;
     private List<Obserwacja> obserwacje;
     private Set<String> languages;
 
 
     public FileHandling(String filePath) {
-        this.filePath = filePath;
         trainingDataFiles = new LinkedHashMap<>();
         languages = new TreeSet<>();
         readTrainingDatadirToMap(filePath);
         obserwacje = new ArrayList<>();
         makeObserwacjaList();
-//        obserwacje.forEach(System.out::println);
+        obserwacje.forEach(System.out::println);
     }
 
     private void readTrainingDatadirToMap(String dirName) {
@@ -32,14 +30,10 @@ public class FileHandling {
                     String language = file.getParent().getFileName().toString();
                     String fileName = file.toFile().getAbsolutePath();
 
-                    if (trainingDataFiles.containsKey(language)) {
-                        trainingDataFiles.get(language).add(fileName);
-                    } else {
-                        List<String> list = new ArrayList<>();
-                        list.add(fileName);
-                        trainingDataFiles.put(language, list);
-                        languages.add(language);
-                    }
+                    trainingDataFiles.computeIfAbsent(language, k -> {
+                        languages.add(k);
+                        return new ArrayList<>();
+                    }).add(fileName);
                     return FileVisitResult.CONTINUE;
                 }
             });

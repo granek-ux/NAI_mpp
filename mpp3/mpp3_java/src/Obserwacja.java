@@ -1,12 +1,17 @@
 import java.util.List;
 
 public class Obserwacja {
-    private String atrybutDecyzyjny;
-    private List<Double> listaAtrybutowwarunkowych;
+    private final String atrybutDecyzyjny;
+    private final List<Double> listaAtrybutowwarunkowych;
 
     public Obserwacja(String atrybutDecyzyjny, List<Double> listaAtrybutowwarunkowych) {
         this.atrybutDecyzyjny = atrybutDecyzyjny;
         this.listaAtrybutowwarunkowych = listaAtrybutowwarunkowych;
+    }
+
+    public Obserwacja(List<Double> listaAtrybutowwarunkowych) {
+        this.listaAtrybutowwarunkowych = listaAtrybutowwarunkowych;
+        this.atrybutDecyzyjny = null;
     }
 
     public List<Double> getListaAtrybutowwarunkowych() {
@@ -15,11 +20,6 @@ public class Obserwacja {
 
     public String getAtrybutDecyzyjny() {
         return atrybutDecyzyjny;
-    }
-
-    public Obserwacja(List<Double> listaAtrybutowwarunkowych) {
-        this.listaAtrybutowwarunkowych = listaAtrybutowwarunkowych;
-        this.atrybutDecyzyjny = null;
     }
 
     public int getListSize ()
