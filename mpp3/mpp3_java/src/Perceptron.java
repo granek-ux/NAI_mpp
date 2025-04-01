@@ -12,10 +12,10 @@ import java.util.stream.Stream;
 
 public class Perceptron {
     private List<Double> weights;
-    private String language;
-    private int sizeOfWeights;
+    private final String language;
+    private final int sizeOfWeights;
     private final double learningConstant =  0.1;
-    private final double wantedError = 0.01;
+    private final double wantedError = 0.1;
 
     public Perceptron(String language, List<Obserwacja> trainingData) {
         this.language = language;
@@ -37,40 +37,6 @@ public class Perceptron {
         double stalaPoprawki = learningConstant * (decision - y) * y * ( 1 - y);
 
         IntStream.range(0, weights.size()).forEach(i -> weights.set(i, (weights.get(i) + stalaPoprawki  * inputs.get(i) )));
-//
-//        double norm = Math.sqrt(weights.stream().mapToDouble(w -> w * w).sum());
-//
-//        IntStream.range(0, weights.size()).forEach(i -> weights.set(i, weights.get(i) / norm));
-//
-//        double tsts =0;
-//
-//        for (double t: weights) {
-//            tsts += Math.pow(t, 2);
-//        }
-//        tsts = Math.sqrt(tsts);
-//
-//        for(int i=0 ; i < weights.size() ; i++ ) {
-//            weights.set(i, weights.get(i)/tsts);
-//        }
-
-//        double norm = 0.0;
-//
-//        for (int i = 0; i < weights.size(); i++) {
-//            double updatedWeight = weights.get(i) + stalaPoprawki * inputs.get(i);
-//            weights.set(i, updatedWeight);
-//            norm += updatedWeight * updatedWeight;
-//        }
-//
-//        norm = Math.sqrt(norm);
-//
-//        for (int i = 0; i < weights.size(); i++) {
-//            weights.set(i, weights.get(i) / norm);
-
-//        }
-
-
-
-//        weights.forEach(System.out::println);
 
         return error;
     }

@@ -15,8 +15,6 @@ public class RecognitionApp extends JFrame {
         this.setTitle("recognition");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(800, 600);
-//        this.setLocationRelativeTo(null);
-//        this.setResizable(false);
         this.setVisible(true);
         this.add(mainPanel);
 

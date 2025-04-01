@@ -8,7 +8,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        System.out.println("Pomiaru czas start");
+        System.out.println("Rozpoczeto uczenie");
 
         FileHandling fh = new FileHandling(traning);
 
@@ -39,6 +39,15 @@ public class Main {
                 .map(obs -> obs.getAtrybutDecyzyjny().equalsIgnoreCase(getResultFromPerceptron(perceptrons, obs.getListaAtrybutowwarunkowych())) ? 1 : 0)
                 .mapToInt(Integer::intValue)
                 .sum();
+
+        int length = testData.size();
+
+        double percent = (double) counter / (double) length;
+        percent*=100;
+
+        System.out.println("ilość poprawnych: " + counter + " z " + length);
+        System.out.println("procent to: " + percent + " %");
+
     }
 
     private static String getResultFromPerceptron(List<Perceptron> perceptrons, List<Double> inputs) {
@@ -46,15 +55,7 @@ public class Main {
                 .max(Comparator.comparingDouble(p -> p.Compute(inputs)))
                 .map(Perceptron::getLanguage)
                 .orElse("");
-//
-//        System.out.println("nowyyyyyyyy");
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//
+
 //        for (Perceptron perceptron : perceptrons) {
 //            System.out.println(perceptron.Compute(inputs) + " " + perceptron.getLanguage());
 //        }
