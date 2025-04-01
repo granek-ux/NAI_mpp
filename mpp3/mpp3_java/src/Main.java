@@ -51,6 +51,7 @@ public class Main {
     }
 
     private static String getResultFromPerceptron(List<Perceptron> perceptrons, List<Double> inputs) {
+        Perceptron.normalizeVector(inputs);
         return perceptrons.stream()
                 .max(Comparator.comparingDouble(p -> p.Compute(inputs)))
                 .map(Perceptron::getLanguage)
@@ -59,6 +60,8 @@ public class Main {
 //        for (Perceptron perceptron : perceptrons) {
 //            System.out.println(perceptron.Compute(inputs) + " " + perceptron.getLanguage());
 //        }
+//
+//        System.out.println();
 //
 //        return "";
     }
