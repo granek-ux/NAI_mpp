@@ -18,7 +18,7 @@ public class FileHandling {
         readTrainingDatadirToMap(filePath);
         obserwacje = new ArrayList<>();
         makeObserwacjaList();
-        obserwacje.forEach(System.out::println);
+//        obserwacje.forEach(System.out::println);
     }
 
     private void readTrainingDatadirToMap(String dirName) {
@@ -62,6 +62,8 @@ public class FileHandling {
         List<Double> list = map.values().stream()
                 .map(value -> value / (double) sum)
                 .collect(Collectors.toList());
+
+        list = Perceptron.normalizeVector(list);
 
         return new Obserwacja(language, list);
     }
