@@ -45,7 +45,7 @@ public class FileHandling {
     private static Obserwacja readFile(String language, String fileName) {
         Map<Character,Integer> map = makeMap();
         try (Stream<String> lines = Files.lines(Paths.get(fileName))) {
-            lines.forEach(line -> line.chars()
+            lines.forEach(line -> line.toLowerCase().chars()
                     .mapToObj(c -> (char) c)
                     .filter(map::containsKey)
                     .forEach(c -> map.computeIfPresent(c, (key, value) -> value + 1)));
