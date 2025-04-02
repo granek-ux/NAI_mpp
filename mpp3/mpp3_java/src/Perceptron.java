@@ -28,13 +28,13 @@ public class Perceptron {
     public double Compute(List<Double> inputs) {
         double net = IntStream.range(0, inputs.size()).mapToDouble(i -> weights.get(i) * inputs.get(i)).sum();
 
-        return 1 / (1 + Math.exp( -net) );
+        return (2 / (1 + Math.exp( -net) ) -1) ;
     }
     private Double Learn(List<Double> inputs, double decision) {
         double y = Compute(inputs);
         double error = 1./2. * Math.pow ((decision - y ), 2);
 
-        double stalaPoprawki = learningConstant * (decision - y) * y * ( 1 - y);
+        double stalaPoprawki = learningConstant * 0.5 * (decision - y) * ( 1 - Math.pow(y,2));
 
         IntStream.range(0, weights.size()).forEach(i -> weights.set(i, (weights.get(i) + stalaPoprawki  * inputs.get(i) )));
 
@@ -47,7 +47,7 @@ public class Perceptron {
         while (!czySieZgadza) {
             double totalerr =0.;
             for (Obserwacja o : trainingData) {
-                 totalerr += Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals(language) ? 1 : 0);
+                 totalerr += Learn(o.getListaAtrybutowwarunkowych(), o.getAtrybutDecyzyjny().equals(language) ? 1 : -1);
             }
 
             czySieZgadza = totalerr  < wantedError;
@@ -63,10 +63,12 @@ public class Perceptron {
         this.weights = Stream.generate(random::nextDouble)
                 .limit(sizeOfWeights)
                 .collect(Collectors.toList());
+
+        normalizeVector(weights);
     }
 
 
-    public static List<Double> normalizeVector (List<Double> vector ) {
+    public static void normalizeVector (List<Double> vector ) {
 
         double norm = vector.stream().mapToDouble(e -> Math.pow(e,2)).sum();
         norm = Math.sqrt(norm);
@@ -74,8 +76,6 @@ public class Perceptron {
         for(int i = 0; i < vector.size(); i++) {
             vector.set(i, vector.get(i) / norm);
         }
-
-        return vector;
     }
 
     public String getLanguage() {
