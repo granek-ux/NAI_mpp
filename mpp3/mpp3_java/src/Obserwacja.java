@@ -2,20 +2,20 @@ import java.util.List;
 
 public class Obserwacja {
     private final String atrybutDecyzyjny;
-    private final List<Double> listaAtrybutowwarunkowych;
+    private final List<Double> listaAtrybutowWarunkowych;
 
-    public Obserwacja(String atrybutDecyzyjny, List<Double> listaAtrybutowwarunkowych) {
+    public Obserwacja(String atrybutDecyzyjny, List<Double> listaAtrybutowWarunkowych) {
         this.atrybutDecyzyjny = atrybutDecyzyjny;
-        this.listaAtrybutowwarunkowych = listaAtrybutowwarunkowych;
+        this.listaAtrybutowWarunkowych = listaAtrybutowWarunkowych;
     }
 
-    public Obserwacja(List<Double> listaAtrybutowwarunkowych) {
-        this.listaAtrybutowwarunkowych = listaAtrybutowwarunkowych;
+    public Obserwacja(List<Double> listaAtrybutowWarunkowych) {
+        this.listaAtrybutowWarunkowych = listaAtrybutowWarunkowych;
         this.atrybutDecyzyjny = null;
     }
 
-    public List<Double> getListaAtrybutowwarunkowych() {
-        return listaAtrybutowwarunkowych;
+    public List<Double> getListaAtrybutowWarunkowych() {
+        return listaAtrybutowWarunkowych;
     }
 
     public String getAtrybutDecyzyjny() {
@@ -24,14 +24,14 @@ public class Obserwacja {
 
     public int getListSize ()
     {
-        return listaAtrybutowwarunkowych.size();
+        return listaAtrybutowWarunkowych.size();
     }
 
     @Override
     public String toString() {
         return "Obserwacja{" +
                 "atrybutDecyzyjny='" + atrybutDecyzyjny + '\'' +
-                ", listaAtrybutowwarunkowych=" + listaAtrybutowwarunkowych +
+                ", listaAtrybutowWarunkowych=" + listaAtrybutowWarunkowych +
                 '}';
     }
 }
