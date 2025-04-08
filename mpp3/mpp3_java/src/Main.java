@@ -36,7 +36,7 @@ public class Main {
         List<Obserwacja> testData = fh.getObserwacje();
 
         int counter = testData.stream()
-                .map(obs -> obs.getAtrybutDecyzyjny().equalsIgnoreCase(getResultFromPerceptron(perceptrons, obs.getListaAtrybutowwarunkowych())) ? 1 : 0)
+                .map(obs -> obs.getAtrybutDecyzyjny().equalsIgnoreCase(getResultFromPerceptron(perceptrons, obs.getListaAtrybutowWarunkowych())) ? 1 : 0)
                 .mapToInt(Integer::intValue)
                 .sum();
 
@@ -51,20 +51,29 @@ public class Main {
     }
 
     private static String getResultFromPerceptron(List<Perceptron> perceptrons, List<Double> inputs) {
-        return perceptrons.stream()
-                .max(Comparator.comparingDouble(p -> p.Compute(inputs)))
-                .map(Perceptron::getLanguage)
-                .orElse("");
+//        return perceptrons.stream()
+//                .max(Comparator.comparingDouble(p -> p.Compute(inputs)))
+//                .map(Perceptron::getLanguage)
+//                .orElse("");
 
-//        for (Perceptron perceptron : perceptrons) {
-//            System.out.println(perceptron.Compute(inputs) + " " + perceptron.getLanguage());
-//        }
-//
-//        return "";
+        double max = Double.NEGATIVE_INFINITY;
+        String maxString = "";
+
+        for (Perceptron perceptron : perceptrons) {
+            double y = perceptron.compute(inputs);
+            if (y > max) {
+                max = y;
+                maxString = perceptron.getLanguage();
+            }
+            System.out.println(y + " " + perceptron.getLanguage());
+        }
+        System.out.println();
+
+        return maxString;
     }
 
 
-    public static String kasyfikacjaInputUsera(List<Perceptron> perceptrons, String text) {
+    public static String klasyfikacjaInputUsera(List<Perceptron> perceptrons, String text) {
 
         Map<Character, Integer> map = FileHandling.makeMap();
         text.chars()
@@ -74,7 +83,7 @@ public class Main {
 
         Obserwacja obserwacja = FileHandling.getObserwacja(null, map);
 
-        return getResultFromPerceptron(perceptrons, obserwacja.getListaAtrybutowwarunkowych());
+        return getResultFromPerceptron(perceptrons, obserwacja.getListaAtrybutowWarunkowych());
 
 
     }
