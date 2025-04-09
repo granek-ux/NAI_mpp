@@ -18,7 +18,7 @@ public class FileHandling {
         readTrainingDatadirToMap(filePath);
         obserwacje = new ArrayList<>();
         makeObserwacjaList();
-//        obserwacje.forEach(System.out::println);
+        obserwacje.forEach(System.out::println);
     }
 
     private void readTrainingDatadirToMap(String dirName) {

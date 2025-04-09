@@ -23,7 +23,6 @@ public class Main {
 
         double time = (System.nanoTime() - start) / 1_000_000_000F;
 
-
         System.out.println("Uczenie trwało: " + time + " sec");
 
         test(perceptrons);
@@ -43,7 +42,7 @@ public class Main {
         int length = testData.size();
 
         double percent = (double) counter / (double) length;
-        percent*=100;
+        percent *= 100;
 
         System.out.println("ilość poprawnych: " + counter + " z " + length);
         System.out.println("procent to: " + percent + " %");
@@ -56,13 +55,13 @@ public class Main {
 //                .map(Perceptron::getLanguage)
 //                .orElse("");
 
-        double max = Double.NEGATIVE_INFINITY;
+        double min = Double.NEGATIVE_INFINITY;
         String maxString = "";
 
         for (Perceptron perceptron : perceptrons) {
             double y = perceptron.compute(inputs);
-            if (y > max) {
-                max = y;
+            if (y > min) {
+                min = y;
                 maxString = perceptron.getLanguage();
             }
             System.out.println(y + " " + perceptron.getLanguage());
@@ -71,7 +70,6 @@ public class Main {
 
         return maxString;
     }
-
 
     public static String klasyfikacjaInputUsera(List<Perceptron> perceptrons, String text) {
 
@@ -84,7 +82,5 @@ public class Main {
         Obserwacja obserwacja = FileHandling.getObserwacja(null, map);
 
         return getResultFromPerceptron(perceptrons, obserwacja.getListaAtrybutowWarunkowych());
-
-
     }
 }
