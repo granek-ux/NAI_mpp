@@ -10,7 +10,7 @@ public class Perceptron {
     private final String language;
     private final int sizeOfWeights;
     private final double learningConstant =  0.1;
-    private final double wantedError = 0.1;
+    private final double wantedError = 0.01;
 
     public Perceptron(String language, List<Obserwacja> trainingData) {
         this.language = language;
@@ -21,7 +21,6 @@ public class Perceptron {
     }
 
     public double compute(List<Double> inputs) {
-//        normalizeVector(inputs);
         double net = IntStream.range(0, inputs.size()).mapToDouble(i -> weights.get(i) * inputs.get(i)).sum();
 
         return (2 / (1 + Math.exp( -net) ) -1) ;
@@ -34,7 +33,6 @@ public class Perceptron {
 
         IntStream.range(0, weights.size()).forEach(i -> weights.set(i, (weights.get(i) + stalaPoprawki  * inputs.get(i) )));
 
-//        normalizeVector(weights);
 
         return error;
     }
@@ -62,7 +60,6 @@ public class Perceptron {
                 .limit(sizeOfWeights)
                 .collect(Collectors.toList());
 
-//        normalizeVector(weights);
     }
 
 
