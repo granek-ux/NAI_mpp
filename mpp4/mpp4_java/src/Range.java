@@ -22,12 +22,10 @@ public record Range(String name, double start, double max) {
             //todo przemyslec to czy nie towrzyć jakiegoś nowego przedziału
             if (i == 0)
             {
-//                start = Double.NEGATIVE_INFINITY;
             ranges.add(new Range("Minimal Value" + numberOfTables, Double.NEGATIVE_INFINITY, min));
             }
             if (i == k - 1)
             {
-//                end = Double.POSITIVE_INFINITY;
                 ranges.add(new Range("Max Value" + numberOfTables, max, Double.POSITIVE_INFINITY));
             }
 

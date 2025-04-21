@@ -2,7 +2,7 @@ import java.util.List;
 
 public class Obserwacja {
     private final String atrybutDecyzyjny;
-    private List<String> listaAtrybutowWarunkowych;
+    private final List<String> listaAtrybutowWarunkowych;
 
     public Obserwacja(String atrybutDecyzyjny, List<String> listaAtrybutowWarunkowych) {
         this.atrybutDecyzyjny = atrybutDecyzyjny;
@@ -17,9 +17,6 @@ public class Obserwacja {
         return listaAtrybutowWarunkowych;
     }
 
-    public void setListaAtrybutowWarunkowych(List<String> listaAtrybutowWarunkowych) {
-        this.listaAtrybutowWarunkowych = listaAtrybutowWarunkowych;
-    }
 
     public void setAtrybutWarunkowy(int i, String name ) {
         listaAtrybutowWarunkowych.set(i, name);

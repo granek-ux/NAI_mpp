@@ -86,4 +86,13 @@ public class FileHandling {
 
      return new Obserwacja(name, attributes);
     }
+
+    public static List<Integer> quntytyOfRanges ()
+    {
+
+       return ranges.stream().map( e-> {
+            return e.size();
+        }).collect(Collectors.toList());
+
+    }
 }
