@@ -90,9 +90,7 @@ public class FileHandling {
     public static List<Integer> quntytyOfRanges ()
     {
 
-       return ranges.stream().map( e-> {
-            return e.size();
-        }).collect(Collectors.toList());
+       return ranges.stream().map(List::size).collect(Collectors.toList());
 
     }
 }

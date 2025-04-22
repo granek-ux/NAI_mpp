@@ -44,9 +44,7 @@ public class NaiveBayesClassifier {
         Set<Integer> toChange = new HashSet<>();
 
         // Prawdopodobieństwo bez wygładzania
-        obliczniePrawdopodobienstwa(namedQuatity, toChange).forEach( (k, v) -> {
-            System.out.println("prawdopodobienstwo na " + k + " " + v + "  przed wygladzeniem");
-        });
+        obliczniePrawdopodobienstwa(namedQuatity, toChange).forEach( (k, v) -> System.out.println("prawdopodobienstwo na " + k + " " + v + "  przed wygladzeniem"));
 
         toChange = PozycjeDoWygladzenia(namedQuatity);
 
@@ -55,9 +53,7 @@ public class NaiveBayesClassifier {
 
         System.out.println();
 
-        possibility.forEach((k, v) -> {
-            System.out.println("prawdopodobienstwo na " + k + " " + v + "  po wygladzeniu");
-        });
+        possibility.forEach((k, v) -> System.out.println("prawdopodobienstwo na " + k + " " + v + "  po wygladzeniu"));
 
         return possibility.entrySet()
                 .stream()
@@ -138,19 +134,19 @@ public class NaiveBayesClassifier {
         }
 
         System.out.println("\nConfusion Matrix:");
-        System.out.print(String.format("%15s", ""));
+        System.out.printf("%15s", "");
         for (String predicted : allClasses) {
-            System.out.print(String.format("%15s", predicted));
+            System.out.printf("%15s", predicted);
         }
         System.out.println();
 
         for (String actual : allClasses) {
-            System.out.print(String.format("%15s", actual));
+            System.out.printf("%15s", actual);
             for (String predicted : allClasses) {
                 int count = confusionMatrix
                         .getOrDefault(actual, new HashMap<>())
                         .getOrDefault(predicted, 0);
-                System.out.print(String.format("%15d", count));
+                System.out.printf("%15d", count);
             }
             System.out.println();
         }

@@ -19,7 +19,6 @@ public record Range(String name, double start, double max) {
 
             start = Math.round(start * 100.0) / 100.0;
             end = Math.round(end * 100.0) / 100.0;
-            //todo przemyslec to czy nie towrzyć jakiegoś nowego przedziału
             if (i == 0)
             {
             ranges.add(new Range("Minimal Value" + numberOfTables, Double.NEGATIVE_INFINITY, min));
