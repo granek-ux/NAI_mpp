@@ -115,16 +115,8 @@ public class NaiveBayesClassifier {
 
             confusionMatrix
                     .computeIfAbsent(actual, k -> new HashMap<>())
-                    .merge(predicted, 1, Integer::sum);
+                    .compute(predicted, (k, v) -> v == null ? 1 : v + 1);
         }
-
-        System.out.println(couter + " out of " + testObservations.size());
-
-        double procent = (double) couter / testObservations.size();
-
-        procent = Math.round(procent * 100.0);
-
-        System.out.println("procent = " + procent + "%");
 
         // Macierz pomyłek
         Set<String> allClasses = new TreeSet<>();
@@ -133,7 +125,8 @@ public class NaiveBayesClassifier {
             allClasses.addAll(confusionMatrix.get(actual).keySet());
         }
 
-        System.out.println("\nConfusion Matrix:");
+        System.out.println();
+        System.out.println("Macierz pomylek:");
         System.out.printf("%15s", "");
         for (String predicted : allClasses) {
             System.out.printf("%15s", predicted);
@@ -149,12 +142,20 @@ public class NaiveBayesClassifier {
                 System.out.printf("%15d", count);
             }
             System.out.println();
+
         }
+        System.out.println();
+        System.out.println(couter + " out of " + testObservations.size());
+
+        double procent = (double) couter / testObservations.size();
+
+        procent = Math.round(procent * 100.0);
+
+        System.out.println("procent = " + procent + "%");
     }
 
 
     public int atributesSize() {
-
         return traningobserwacje.getFirst().getListaAtrybutowWarunkowych().size();
     }
 }
