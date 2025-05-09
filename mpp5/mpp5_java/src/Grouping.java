@@ -7,17 +7,19 @@ public class Grouping {
     List<Observation> observations;
     List<Cluster> clusters = new ArrayList<>();
     private int k;
+    private int iterationsCuounter = 0;
 
-    public Grouping(int k, String filename) {
+    public Grouping(int k, String filename) throws TooMuchClusters {
         this.k = k;
         try {
             observations = FileHandling.readFile(filename);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        if(observations.size() < k)
+            throw new TooMuchClusters("Za duza ilosc k na zbiór");
         boolean endFinalLoop = false;
         while (!endFinalLoop) {
-
             InitializeClusters();
             boolean endGrouping = false;
             boolean endCluster = false;
@@ -31,6 +33,8 @@ public class Grouping {
         }
         showResult();
     }
+
+
 
     private void InitializeClusters() {
         Set<Integer> selectedIndices = new HashSet<>();
@@ -88,8 +92,7 @@ public class Grouping {
         return isEnded;
     }
 
-    private void showDistances()
-    {
+    private void showDistances() {
         StringBuilder sb = new StringBuilder();
         for (Cluster cluster : clusters) {
             double sum = 0.0;
@@ -98,7 +101,7 @@ public class Grouping {
             List<List<Double>> filtredList = observations.stream().filter(observation -> observation.getClasterId() == cluster.getId()).map(Observation::getList).toList();
 
             for (List<Double> vector : filtredList) {
-                sum += Math.pow(calculateDistance(vector, cluster.getAtribute()),2);
+                sum += Math.pow(calculateDistance(vector, cluster.getAtribute()), 2);
             }
 
             sb.append("suma kwadratów od centroida: ").append(sum).append(System.lineSeparator());
@@ -107,8 +110,7 @@ public class Grouping {
         System.out.println(sb.toString());
     }
 
-    private boolean checkIfAnyClusterIsEmpty()
-    {
+    private boolean checkIfAnyClusterIsEmpty() {
         for (Cluster cluster : clusters) {
 
             long quantity = observations.stream().filter(observation -> observation.getClasterId() == cluster.getId()).count();
@@ -118,8 +120,7 @@ public class Grouping {
         return true;
     }
 
-    private void showResult()
-    {
+    private void showResult() {
         StringBuilder sb = new StringBuilder();
         sb.append("Wynik: ").append(System.lineSeparator());
 

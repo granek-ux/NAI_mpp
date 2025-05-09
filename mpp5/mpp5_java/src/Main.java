@@ -5,7 +5,7 @@ public class Main {
     private static final String testFileName = "../iris_test.txt";
     private static final String treningFileName = "../iris_training.txt";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TooMuchClusters {
         Scanner sc = new Scanner(System.in);
 
         System.out.println("Podaj k:");
