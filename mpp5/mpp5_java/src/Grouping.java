@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class Grouping {
 
@@ -124,9 +125,13 @@ public class Grouping {
         sb.append("Wynik: ").append(System.lineSeparator());
 
         for (Cluster cluster : clusters) {
-            sb.append("Cluster nr. ").append(cluster.getId()).append(" posiada: ").append(System.lineSeparator());
+            List<Observation> list = observations.stream().filter(observation -> observation.getClasterId() == cluster.getId()).toList();
 
-            observations.stream().filter(observation -> observation.getClasterId() == cluster.getId()).forEach(observation -> {
+            Double entropy = calculateEntropy(list);
+
+            sb.append("Cluster nr. ").append(cluster.getId()).append(" ma entropie ").append(entropy).append(" oraz posiada: ").append(System.lineSeparator());
+
+            list.forEach(observation -> {
                 sb.append(observation.toString()).append(System.lineSeparator());
             });
             sb.append(System.lineSeparator()).append(System.lineSeparator());
@@ -135,24 +140,16 @@ public class Grouping {
         System.out.println(sb.toString());
     }
 
-//    public static void main(String[] args) {
-//        Scanner sc = new Scanner(System.in);
-//        String[] split = sc.nextLine().split("\\s+");
-//        List<Double> collect = Arrays.stream(split).map(Double::parseDouble).collect(Collectors.toList());
-//        double suma = collect.stream().mapToDouble(aDouble -> aDouble).sum();
-//        double entropia = collect.stream().map(e ->
-//        {
-//            e = e / suma;
-//            return e * log2(e);
-//        }).mapToDouble(Double::doubleValue).sum();
-//        entropia = entropia * (-1);
-//
-//        if (entropia == -0)
-//            entropia = 0;
-//
-//        System.out.println("Entropia: " + entropia);
-//    }
+    private Double calculateEntropy (List<Observation> observations)
+    {
+        Map<String, Long> map = observations.stream()
+                .collect(Collectors.groupingBy(Observation::getAtribute, Collectors.counting()));
 
+
+        double entropy = - map.values().stream().mapToDouble(v -> (double) v / observations.size()).map(v -> v * log2(v)).sum();
+
+        return entropy == -0.0 ? 0.0 : entropy;
+    }
 
     public static double log2(double n) {
         return (Math.log(n) / Math.log(2));
