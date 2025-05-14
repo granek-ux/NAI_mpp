@@ -8,9 +8,9 @@ public class Grouping {
     List<Observation> observations;
     List<Cluster> clusters = new ArrayList<>();
     private int k;
-    private int iterationsCuounter = 0;
 
     public Grouping(int k, String filename) throws TooMuchClusters {
+        int iterations =0;
         this.k = k;
         try {
             observations = FileHandling.readFile(filename);
@@ -27,6 +27,7 @@ public class Grouping {
              while (!endGrouping && !endCluster) {
                 endGrouping = group();
                 endCluster = setClustersPositions();
+                System.out.println("Iteracja numer: " + ++iterations);
                 showDistances();
                 endFinalLoop = checkIfAnyClusterIsEmpty();
 
