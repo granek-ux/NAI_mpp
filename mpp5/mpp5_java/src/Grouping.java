@@ -7,7 +7,7 @@ public class Grouping {
 
     List<Observation> observations;
     List<Cluster> clusters = new ArrayList<>();
-    private int k;
+    private final int k;
 
     public Grouping(int k, String filename) throws TooMuchClusters {
         int iterations =0;
@@ -75,7 +75,6 @@ public class Grouping {
             int n = list.getFirst().size();
 
             List<Double> newList = new ArrayList<>();
-            List<Double> meanVector = new ArrayList<>();
 
             for (int i = 0; i < n; i++) {
                 final int index = i;
@@ -95,10 +94,12 @@ public class Grouping {
     }
 
     private void showDistances() {
-        StringBuilder sb = new StringBuilder();
+
+        double fsum = 0.0;
+//        StringBuilder sb = new StringBuilder();
         for (Cluster cluster : clusters) {
             double sum = 0.0;
-            sb.append("Claster nr. ").append(cluster.getId()).append(System.lineSeparator());
+//            sb.append("Claster nr. ").append(cluster.getId()).append(System.lineSeparator());
 
             List<List<Double>> filtredList = observations.stream().filter(observation -> observation.getClasterId() == cluster.getId()).map(Observation::getList).toList();
 
@@ -106,10 +107,14 @@ public class Grouping {
                 sum += Math.pow(calculateDistance(vector, cluster.getAtribute()), 2);
             }
 
-            sb.append("suma kwadratów od centroida: ").append(sum).append(System.lineSeparator());
+            fsum += sum;
+
+//            sb.append("suma kwadratów od centroida: ").append(sum).append(System.lineSeparator());
         }
 
-        System.out.println(sb.toString());
+//        System.out.println(sb.toString());
+
+        System.out.println("Suma kwdratow to: " + fsum);
     }
 
     private boolean checkIfAnyClusterIsEmpty() {
