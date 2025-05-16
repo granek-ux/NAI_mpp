@@ -1,57 +1,64 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
+    private static int capicity;
+
+    public static void setCapicity(int capicity) {
+        Main.capicity = capicity;
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        System.out.println("Podaj N:");
-        int n = sc.nextInt();
-
-        int[] a = new int[n];
-
-        boolean kont = true;
-
-        while (true) {
-//                printArray(a);
-                int i = a.length-1;
-                kont = checkifDone(a);
-                if (!kont)
-                    break;
-
-                addToarr(a, i);
-
-
+        List<Dataset> datasets = FileHandling.ReadDatasetsFromFile("plecak.txt");
+        List<Item> items = new ArrayList<>();
+        System.out.println("Podaj id Dataset od 1 do " + datasets.size());
+        System.out.println("Jeśli zostanie podane coś innego liczba zostanie wylosowana");
+        Random rand = new Random();
+        int i;
+        try {
+            i = sc.nextInt();
+            if (i > datasets.size())
+                throw new Exception();
+        } catch (Exception e) {
+            i = rand.nextInt(datasets.size());
+            System.out.println("Wylosowano " + i);
         }
-
-        System.out.println("Stop");
-
-    }
-
-    public static boolean checkifDone(int[] n) {
-        boolean czygit = false;
-        for (int i : n) {
-            if (i == 0) czygit = true;
-        }
-        return czygit;
-    }
-
-    public static void printArray(int[] a) {
-        System.out.print("[");
-        for (int w : a) {
-            System.out.print(w + ", ");
-        }
-        System.out.println("]");
-    }
-
-    public static void addToarr(int[] a, int i)
-    {
-        if(a[i] == 0)
-            a[i] = 1;
-        else if (a[i] == 1)
         {
-            a[i] = 0;
-            addToarr(a, i - 1);
+            Dataset dataset = datasets.get(i - 1);
+
+            int[] vals = getInt(dataset.vals());
+            int[] sizes = getInt(dataset.sizes());
+            for (int j = 0; j < vals.length; j++) {
+                items.add(new Item(vals[j], sizes[j]));
+            }
         }
 
+
+        Backpack backpack = new Backpack(capicity, items);
+
+
+        Solve s = new Solve(backpack);
+
+        s.bruteForce();
+
+        s.heurystka();
+
+    }
+
+    private static int[] getInt(String line) {
+        int start = line.indexOf('{') + 1;
+        int end = line.indexOf('}');
+        String numbersOnly = line.substring(start, end).trim();
+        
+        String[] strings = numbersOnly.split(",\\s*");
+
+        int[] numbers = new int[strings.length];
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = Integer.parseInt(strings[i]);
+        }
+        return numbers;
     }
 }
