@@ -36,23 +36,20 @@ public class Main {
             }
         }
 
-
         Backpack backpack = new Backpack(capicity, items);
-
 
         Solve s = new Solve(backpack);
 
         s.bruteForce();
 
         s.heurystka();
-
     }
 
     private static int[] getInt(String line) {
         int start = line.indexOf('{') + 1;
         int end = line.indexOf('}');
         String numbersOnly = line.substring(start, end).trim();
-        
+
         String[] strings = numbersOnly.split(",\\s*");
 
         int[] numbers = new int[strings.length];

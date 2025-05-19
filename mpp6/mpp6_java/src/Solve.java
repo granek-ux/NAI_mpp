@@ -15,7 +15,6 @@ public class Solve {
         List<Item> result = new ArrayList<>();
         int currentCapacity = 0;
         List<Item> currentDataset = new ArrayList<>(backpack.getDataset());
-//        Collections.copy(backpack.getDataset(), currentDataset);
 
         Collections.sort(currentDataset);
         Collections.reverse(currentDataset);

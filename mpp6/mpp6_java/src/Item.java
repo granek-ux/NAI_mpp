@@ -33,11 +33,6 @@ public final class Item implements Comparable<Item>{
 
     @Override
     public String toString() {
-        return "Item{" +
-                "id=" + id +
-                ", size=" + size +
-                ", vals=" + vals +
-                ", density=" + density +
-                '}';
+        return "Przedmiot ( s: " + size + ", v: " + vals + ")";
     }
 }
