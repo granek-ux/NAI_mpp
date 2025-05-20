@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        List<Dataset> datasets = FileHandling.ReadDatasetsFromFile("plecak.txt");
+        List<Dataset> datasets = FileHandling.ReadDatasetsFromFile("../plecak.txt");
         List<Item> items = new ArrayList<>();
         System.out.println("Podaj id Dataset od 1 do " + datasets.size());
         System.out.println("Jeśli zostanie podane coś innego liczba zostanie wylosowana");
@@ -20,7 +20,7 @@ public class Main {
         int i;
         try {
             i = sc.nextInt();
-            if (i > datasets.size())
+            if (i > datasets.size() || i <=0)
                 throw new Exception();
         } catch (Exception e) {
             i = rand.nextInt(datasets.size());
@@ -41,7 +41,9 @@ public class Main {
         Solve s = new Solve(backpack);
 
         s.bruteForce();
-
+        System.out.println();
+        System.out.println();
+        System.out.println();
         s.heurystka();
     }
 

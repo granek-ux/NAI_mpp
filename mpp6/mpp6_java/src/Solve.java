@@ -4,8 +4,6 @@ import java.util.List;
 
 public class Solve {
     private final Backpack backpack;
-    private int[] arr;
-    private static StringBuilder sb = new StringBuilder();
 
     public Solve(Backpack backpack) {
         this.backpack = backpack;
@@ -14,6 +12,7 @@ public class Solve {
     public void heurystka() {
         List<Item> result = new ArrayList<>();
         int currentCapacity = 0;
+        Long startTime = System.nanoTime();
         List<Item> currentDataset = new ArrayList<>(backpack.getDataset());
 
         Collections.sort(currentDataset);
@@ -27,10 +26,14 @@ public class Solve {
             } else
                 break;
         }
-        System.out.println("wynik heurestyki to: ");
+        Long endTime = System.nanoTime();
+        System.out.println("HEURESTYKA:");
         System.out.println(result);
         double valve = result.stream().mapToDouble(Item::getVals).sum();
+        double capacity = result.stream().mapToDouble(Item::getSize).sum();
         System.out.println("wartosc to: " + valve);
+        System.out.println("pojemność to: " + capacity);
+        System.out.println("Czas działania to: " + (endTime - startTime) / 1000 + " mikrosekund");
     }
 
     public void bruteForce() {
@@ -38,14 +41,14 @@ public class Solve {
         List<Item> dataset = backpack.getDataset();
         int currentCapacity = backpack.getCapacity();
         Long startTime = System.nanoTime();
-        arr = new int[dataset.size()];
+        int[]  arr = new int[dataset.size()];
 
         List<Item> bestSolution = new ArrayList<>();
         List<Item> tmpSolution = new ArrayList<>();
 
         double bestValue = 0;
 
-        boolean continueLoop = true;
+        boolean continueLoop;
 
         while (true) {
             iterationCounter++;
@@ -80,10 +83,13 @@ public class Solve {
         }
         Long endTime = System.nanoTime();
         System.out.println("BRUTE FORCE:");
-        System.out.println("Było " + iterationCounter + " iteracji");
-        System.out.println("Czas działania to: " + (endTime - startTime) / 1000000000 + "s");
         System.out.println(bestSolution);
-        System.out.println("wartosc to: " + bestValue);
+        double valve = bestSolution.stream().mapToDouble(Item::getVals).sum();
+        double capacity = bestSolution.stream().mapToDouble(Item::getSize).sum();
+        System.out.println("wartosc to: " + valve);
+        System.out.println("pojemność to: " + capacity);
+        System.out.println("Liczba spawdznych zestawów: " + iterationCounter);
+        System.out.println("Czas działania to: " + (endTime - startTime) / 1000000000 + "s");
     }
 
     public static boolean checkifDone(int[] n) {
@@ -103,15 +109,5 @@ public class Solve {
         }
         a[i] = 0;
         addToarr(a, i - 1);
-    }
-
-    public static List<Integer> getIndex(int[] arr) {
-        List<Integer> result = new ArrayList<>();
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == 1) {
-                result.add(i);
-            }
-        }
-        return result;
     }
 }

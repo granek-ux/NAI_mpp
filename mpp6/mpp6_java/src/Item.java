@@ -1,4 +1,3 @@
-import java.util.Objects;
 
 public final class Item implements Comparable<Item>{
     private final int id;
@@ -22,10 +21,6 @@ public final class Item implements Comparable<Item>{
         return (double) vals;
     }
 
-    public double getDensity() {
-        return density;
-    }
-
     @Override
     public int compareTo(Item o) {
         return Double.compare(this.density, o.density);
@@ -33,6 +28,6 @@ public final class Item implements Comparable<Item>{
 
     @Override
     public String toString() {
-        return "Przedmiot ( s: " + size + ", v: " + vals + ")";
+        return "(id: " + id + " s: " + size + ", v: " + vals + ")";
     }
 }
